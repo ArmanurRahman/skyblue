@@ -3,7 +3,9 @@ module github.com/ArmanurRahman/skyblue
 go 1.15
 
 require (
+	github.com/ArmanurRahman/go-app v0.0.0-20210715151516-90d503329338
 	github.com/cockroachdb/cockroach-go v2.0.1+incompatible // indirect
+	github.com/go-chi/chi/v5 v5.0.3
 	github.com/gobuffalo/attrs v1.0.0 // indirect
 	github.com/gobuffalo/envy v1.9.0 // indirect
 	github.com/gobuffalo/fizz v1.13.0 // indirect
@@ -19,4 +21,5 @@ require (
 	github.com/jackc/pgx/v4 v4.12.0
 	github.com/jmoiron/sqlx v1.3.4 // indirect
 	github.com/joho/godotenv v1.3.0
+	github.com/justinas/nosurf v1.1.1
 )

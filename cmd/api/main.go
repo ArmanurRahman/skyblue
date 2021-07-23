@@ -8,6 +8,7 @@ import (
 
 	"github.com/ArmanurRahman/skyblue/internal/config"
 	"github.com/ArmanurRahman/skyblue/internal/drivers"
+	"github.com/ArmanurRahman/skyblue/internal/handlers"
 	"github.com/joho/godotenv"
 )
 
@@ -34,6 +35,8 @@ func main() {
 	defer db.SQL.Close()
 
 	startServer()
+
+	initiateRepo(db)
 
 }
 
@@ -66,7 +69,8 @@ func initiateDatabase() (*drivers.DB, error) {
 func startServer() {
 
 	srv := &http.Server{
-		Addr: fmt.Sprintf(":%s", os.Getenv("APP_PORT")),
+		Addr:    fmt.Sprintf(":%s", os.Getenv("APP_PORT")),
+		Handler: Routes(&app),
 	}
 
 	err := srv.ListenAndServe()
@@ -75,4 +79,9 @@ func startServer() {
 		return
 	}
 	log.Println("Start listining to port", os.Getenv("APP_PORT"))
+}
+
+func initiateRepo(db *drivers.DB) {
+	repo := handlers.NewRepo(&app, db)
+	handlers.NewHandler(repo)
 }
