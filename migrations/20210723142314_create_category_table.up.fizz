@@ -1,0 +1,12 @@
+sql("
+    create table category (
+        id serial primary key,
+        name varchar(50) not null,
+        details varchar(500) ,
+        type varchar(50) not null,        
+        other_info varchar(200),
+        create_at timestamp default current_timestamp,
+        update_at timestamp
+
+    )
+")

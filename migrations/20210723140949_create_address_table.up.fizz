@@ -1,0 +1,13 @@
+sql("
+    create table address (
+        id serial primary key,
+        country varchar(50) not null,
+        city varchar(50) not null,
+        word varchar(50) not null,
+        street varchar(50),
+        other_info varchar(200),
+        create_at timestamp default current_timestamp,
+        update_at timestamp
+
+    )
+")

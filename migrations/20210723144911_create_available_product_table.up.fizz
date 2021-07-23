@@ -1,0 +1,13 @@
+sql("
+     create table available_products(
+        id serial primary key,
+        product_id  int references products(id) on delete cascade,
+        saler_id int references salers(id) on delete cascade,
+        price int not null,    
+        quantity int not null,
+        arrival_date date ,
+        create_at timestamp default current_timestamp,
+        update_at timestamp
+
+    )
+")
