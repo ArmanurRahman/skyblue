@@ -34,9 +34,8 @@ func main() {
 	}
 	defer db.SQL.Close()
 
-	startServer()
-
 	initiateRepo(db)
+	startServer()
 
 }
 
