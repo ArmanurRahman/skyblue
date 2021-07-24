@@ -22,4 +22,6 @@ require (
 	github.com/jmoiron/sqlx v1.3.4 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/justinas/nosurf v1.1.1
+	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
+	honnef.co/go/tools v0.2.0
 )

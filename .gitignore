@@ -2,3 +2,4 @@ run.bat
 skyblue.exe
 .env
 database.yml
+request.http

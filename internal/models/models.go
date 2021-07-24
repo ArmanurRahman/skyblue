@@ -3,14 +3,14 @@ package models
 import "time"
 
 type Address struct {
-	ID         int
-	Country    string
-	City       string
-	Word       string
-	Street     string
-	Other_info string
-	CreateAt   time.Time
-	UpdateAt   time.Time
+	ID        int
+	Country   string
+	City      string
+	Word      string
+	Street    string
+	OtherInfo string
+	CreateAt  time.Time
+	UpdateAt  time.Time
 }
 
 type Saler struct {
@@ -19,6 +19,7 @@ type Saler struct {
 	Details   string
 	Phone     string
 	Email     string
+	Password  string
 	AddressId int
 	CreateAt  time.Time
 	UpdateAt  time.Time
@@ -31,6 +32,7 @@ type User struct {
 	LastName  string
 	Phone     string
 	Email     string
+	Password  string
 	AddressId int
 	CreateAt  time.Time
 	UpdateAt  time.Time
