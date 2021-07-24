@@ -26,7 +26,7 @@ func GenerateHashPasswors(pass string) string {
 	return string(hashedPassword)
 }
 
-func GenerateSuccessResponseJson(w http.ResponseWriter, status int, message string) http.ResponseWriter {
+func GenerateClientResponseJson(w http.ResponseWriter, status int, message string) http.ResponseWriter {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write([]byte(fmt.Sprintf(`{"message": "%s"}`, message)))

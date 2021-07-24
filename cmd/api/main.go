@@ -9,12 +9,14 @@ import (
 	"github.com/ArmanurRahman/skyblue/internal/config"
 	"github.com/ArmanurRahman/skyblue/internal/drivers"
 	"github.com/ArmanurRahman/skyblue/internal/handlers"
+	"github.com/go-playground/validator"
 	"github.com/joho/godotenv"
 )
 
 var app config.AppConfig
 var infoLog *log.Logger
 var errorLog *log.Logger
+var validate *validator.Validate
 
 func main() {
 
@@ -34,7 +36,11 @@ func main() {
 	}
 	defer db.SQL.Close()
 
+	validate = validator.New()
+	app.Validate = validate
+
 	initiateRepo(db)
+
 	startServer()
 
 }

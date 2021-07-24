@@ -4,9 +4,9 @@ import "time"
 
 type Address struct {
 	ID        int
-	Country   string
-	City      string
-	Word      string
+	Country   string `validate:"required"`
+	City      string `validate:"required"`
+	Word      string `validate:"required"`
 	Street    string
 	OtherInfo string
 	CreateAt  time.Time
@@ -28,11 +28,11 @@ type Saler struct {
 
 type User struct {
 	ID        int
-	FirstName string
-	LastName  string
-	Phone     string
-	Email     string
-	Password  string
+	FirstName string `validate:"required"`
+	LastName  string `validate:"required"`
+	Phone     string `validate:"required"`
+	Email     string `validate:"required,email"`
+	Password  string `validate:"required"`
 	AddressId int
 	CreateAt  time.Time
 	UpdateAt  time.Time

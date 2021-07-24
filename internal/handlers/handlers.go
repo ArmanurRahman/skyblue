@@ -58,6 +58,7 @@ func (m *Repository) PostSaler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		helpers.ServerError(w, err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
 		return
 	}
 
@@ -67,6 +68,7 @@ func (m *Repository) PostSaler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(req, &postUser)
 	if err != nil {
 		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
 		return
 	}
 	address := models.Address{
@@ -78,10 +80,10 @@ func (m *Repository) PostSaler(w http.ResponseWriter, r *http.Request) {
 		CreateAt:  time.Now(),
 		UpdateAt:  time.Now(),
 	}
-
-	id, err := m.DB.InsetAddress(address)
+	err = m.App.Validate.Struct(address)
 	if err != nil {
 		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
 		return
 	}
 
@@ -91,19 +93,33 @@ func (m *Repository) PostSaler(w http.ResponseWriter, r *http.Request) {
 		Phone:     postUser.Phone,
 		Email:     postUser.Email,
 		Password:  helpers.GenerateHashPasswors(postUser.Password),
-		AddressId: id,
 		CreateAt:  time.Now(),
 		UpdateAt:  time.Now(),
+		Address:   address,
 	}
 
+	err = m.App.Validate.Struct(user)
+	if err != nil {
+		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
+		return
+	}
+
+	id, err := m.DB.InsetAddress(address)
+
+	if err != nil {
+		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
+		return
+	}
+
+	user.AddressId = id
 	err = m.DB.InsetUser(user)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	helpers.GenerateSuccessResponseJson(w, http.StatusOK, "success")
-	log.Println(id)
-	//fmt.Fprintf(w, "Home")
+	helpers.GenerateClientResponseJson(w, http.StatusOK, "success")
 }
 
 func (m *Repository) PostUser(w http.ResponseWriter, r *http.Request) {
