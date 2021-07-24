@@ -34,3 +34,27 @@ func NewHandler(r *Repository) {
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Home")
 }
+
+func (m *Repository) PostSaler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Home")
+}
+
+func (m *Repository) PostUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Home")
+}
+
+func (m *Repository) GetCategory(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Home")
+}
+
+func (m *Repository) GetAllProduct(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Home")
+}
+
+func (m *Repository) ProductDetails(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Home")
+}
+
+func (m *Repository) SearchProduct(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Home")
+}
