@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"runtime/debug"
@@ -31,4 +32,15 @@ func GenerateClientResponseJson(w http.ResponseWriter, status int, message strin
 	w.WriteHeader(status)
 	w.Write([]byte(fmt.Sprintf(`{"message": "%s"}`, message)))
 	return w
+}
+
+func CheckPassword(hashedPassword, userPassword string) (bool, error) {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(userPassword))
+	if err == bcrypt.ErrMismatchedHashAndPassword {
+		return false, errors.New("incorrect password")
+	} else if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }

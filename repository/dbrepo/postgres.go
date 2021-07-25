@@ -2,6 +2,7 @@ package dbrepo
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/ArmanurRahman/skyblue/internal/models"
@@ -93,4 +94,42 @@ func (m *postgresRepo) InsetSaler(saler models.Saler) error {
 	}
 
 	return nil
+}
+
+func (m *postgresRepo) Login(email string) (models.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var user models.User
+	sql := `select first_name, last_name, email, phone, password, 
+			country, city, word, street, other_info
+			from users U
+			inner join address AD on U.address_id = AD.id 
+			where email = $1
+	`
+
+	row := m.DB.QueryRowContext(ctx, sql, email)
+
+	err := row.Scan(
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+		&user.Phone,
+		&user.Password,
+		&user.Address.Country,
+		&user.Address.City,
+		&user.Address.Word,
+		&user.Address.Street,
+		&user.Address.OtherInfo,
+	)
+
+	if user.FirstName == "" {
+		return user, errors.New("user not found")
+	}
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+
 }

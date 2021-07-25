@@ -43,6 +43,10 @@ func (m *Repository) PostSaler(w http.ResponseWriter, r *http.Request) {
 	m.RegistrationSaler(w, r)
 }
 
+func (m *Repository) Login(w http.ResponseWriter, r *http.Request) {
+	m.LoginUser(w, r)
+}
+
 func (m *Repository) GetCategory(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Home")
 }

@@ -91,3 +91,37 @@ func (m *Repository) RegistrationUser(w http.ResponseWriter, r *http.Request) {
 	}
 	helpers.GenerateClientResponseJson(w, http.StatusOK, "success")
 }
+
+type loginJson struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
+	req, _ := ioutil.ReadAll(r.Body)
+
+	var loginUser loginJson
+	err := json.Unmarshal(req, &loginUser)
+	if err != nil {
+		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
+		return
+	}
+	user, err := m.DB.Login(loginUser.Email)
+	if err != nil {
+		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
+		return
+	}
+
+	isValid, err := helpers.CheckPassword(user.Password, loginUser.Password)
+	if err != nil {
+		log.Println(err)
+	}
+
+	if !isValid {
+		helpers.GenerateClientResponseJson(w, http.StatusNotFound, "invalid credintial")
+		return
+	}
+	helpers.GenerateClientResponseJson(w, http.StatusOK, "success")
+}

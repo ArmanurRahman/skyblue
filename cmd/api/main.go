@@ -9,6 +9,7 @@ import (
 	"github.com/ArmanurRahman/skyblue/internal/config"
 	"github.com/ArmanurRahman/skyblue/internal/drivers"
 	"github.com/ArmanurRahman/skyblue/internal/handlers"
+	"github.com/ArmanurRahman/skyblue/internal/token"
 	"github.com/go-playground/validator"
 	"github.com/joho/godotenv"
 )
@@ -39,6 +40,13 @@ func main() {
 	validate = validator.New()
 	app.Validate = validate
 
+	tokenMaker, err := token.NewJWTMaker(os.Getenv("TOKEN_SECRET_KEY"))
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	app.TokenMaker = tokenMaker
 	initiateRepo(db)
 
 	startServer()
