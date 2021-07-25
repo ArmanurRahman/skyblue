@@ -66,3 +66,31 @@ func (m *postgresRepo) InsetUser(user models.User) error {
 
 	return nil
 }
+
+func (m *postgresRepo) InsetSaler(saler models.Saler) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	sql := `
+		insert into salers (name, details, phone, email, password, address_id, create_at, update_at)
+		values
+		($1, $2, $3, $4, $5, $6, $7, $8) 
+	`
+
+	_, err := m.DB.ExecContext(ctx, sql,
+		saler.Name,
+		saler.Details,
+		saler.Phone,
+		saler.Email,
+		saler.Password,
+		saler.AddressId,
+		saler.CreateAt,
+		saler.UpdateAt,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

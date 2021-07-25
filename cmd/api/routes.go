@@ -12,7 +12,11 @@ func Routes(a *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 	//mux.Use(NoSurf)
 
-	mux.Post("/post-user", handlers.Repo.PostUser)
+	mux.Post("/user-registration", handlers.Repo.PostUser)
+	mux.Post("/saler-registration", handlers.Repo.PostSaler)
 
+	mux.Route("/user", func(mux chi.Router) {
+
+	})
 	return mux
 }

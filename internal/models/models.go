@@ -15,11 +15,11 @@ type Address struct {
 
 type Saler struct {
 	ID        int
-	Name      string
-	Details   string
-	Phone     string
-	Email     string
-	Password  string
+	Name      string `validate:"required"`
+	Details   string `validate:"required"`
+	Phone     string `validate:"required"`
+	Email     string `validate:"required,email"`
+	Password  string `validate:"required"`
 	AddressId int
 	CreateAt  time.Time
 	UpdateAt  time.Time

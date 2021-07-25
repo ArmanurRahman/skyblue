@@ -11,9 +11,9 @@ import (
 	"github.com/ArmanurRahman/skyblue/internal/models"
 )
 
-type userJson struct {
-	FirstName string `json:"firstName"`
-	LstName   string `json:"lastName"`
+type salerJson struct {
+	Name      string `json:"name"`
+	Details   string `json:"details"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
 	Phone     string `json:"phone"`
@@ -24,32 +24,30 @@ type userJson struct {
 	OtherInfo string `json:"otherInfo"`
 }
 
-func (m *Repository) RegistrationUser(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		helpers.ServerError(w, err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
-		return
-	}
-
+func (m *Repository) RegistrationSaler(w http.ResponseWriter, r *http.Request) {
+	//read all data from post api
 	req, _ := ioutil.ReadAll(r.Body)
 
-	var postUser userJson
-	err = json.Unmarshal(req, &postUser)
+	//decode request json
+	var salerParam salerJson
+	err := json.Unmarshal(req, &salerParam)
 	if err != nil {
 		log.Println(err)
 		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
 		return
 	}
+
 	address := models.Address{
-		Country:   postUser.Country,
-		City:      postUser.City,
-		Word:      postUser.Word,
-		Street:    postUser.Street,
-		OtherInfo: postUser.OtherInfo,
+		Country:   salerParam.Country,
+		City:      salerParam.City,
+		Word:      salerParam.Word,
+		Street:    salerParam.Street,
+		OtherInfo: salerParam.OtherInfo,
 		CreateAt:  time.Now(),
 		UpdateAt:  time.Now(),
 	}
+
+	//validate request
 	err = m.App.Validate.Struct(address)
 	if err != nil {
 		log.Println(err)
@@ -57,18 +55,18 @@ func (m *Repository) RegistrationUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := models.User{
-		FirstName: postUser.FirstName,
-		LastName:  postUser.LstName,
-		Phone:     postUser.Phone,
-		Email:     postUser.Email,
-		Password:  helpers.GenerateHashPasswors(postUser.Password),
-		CreateAt:  time.Now(),
-		UpdateAt:  time.Now(),
-		Address:   address,
+	saler := models.Saler{
+		Name:     salerParam.Name,
+		Details:  salerParam.Details,
+		Phone:    salerParam.Phone,
+		Email:    salerParam.Email,
+		Password: helpers.GenerateHashPasswors(salerParam.Password),
+		CreateAt: time.Now(),
+		UpdateAt: time.Now(),
+		Address:  address,
 	}
-
-	err = m.App.Validate.Struct(user)
+	//validate request
+	err = m.App.Validate.Struct(saler)
 	if err != nil {
 		log.Println(err)
 		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
@@ -76,18 +74,19 @@ func (m *Repository) RegistrationUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, err := m.DB.InsetAddress(address)
-
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
 		return
 	}
 
-	user.AddressId = id
-	err = m.DB.InsetUser(user)
+	saler.AddressId = id
+	err = m.DB.InsetSaler(saler)
 	if err != nil {
 		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
 		return
 	}
+
 	helpers.GenerateClientResponseJson(w, http.StatusOK, "success")
 }

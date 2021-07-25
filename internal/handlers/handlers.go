@@ -35,25 +35,12 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Home")
 }
 
-type userJson struct {
-	FirstName string `json:"firstName"`
-	LstName   string `json:"lastName"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	Phone     string `json:"phone"`
-	Country   string `json:"country"`
-	City      string `json:"city"`
-	Word      string `json:"word"`
-	Street    string `json:"street"`
-	OtherInfo string `json:"otherInfo"`
-}
-
 func (m *Repository) PostUser(w http.ResponseWriter, r *http.Request) {
-	m.RegerterUser(w, r)
+	m.RegistrationUser(w, r)
 }
 
 func (m *Repository) PostSaler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Home")
+	m.RegistrationSaler(w, r)
 }
 
 func (m *Repository) GetCategory(w http.ResponseWriter, r *http.Request) {
