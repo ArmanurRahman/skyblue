@@ -134,5 +134,20 @@ func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user.Password = ""
-	helpers.GenerateClientResponseWithPayloadJson(w, http.StatusOK, "Loged in successfully", user, "success")
+
+	//generate token
+	token, err := m.App.TokenMaker.CreateToken(user.Email, time.Hour)
+	if err != nil {
+		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "can't generate token")
+		return
+	}
+
+	res := models.LoginRes{
+		User:  user,
+		Token: token,
+	}
+
+	log.Println(token)
+	helpers.GenerateClientResponseWithPayloadJson(w, http.StatusOK, "Loged in successfully", res, "success")
 }

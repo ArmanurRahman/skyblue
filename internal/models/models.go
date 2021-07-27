@@ -140,3 +140,8 @@ type GetResponseJson struct {
 	Result  string
 	Message string
 }
+
+type LoginRes struct {
+	User  User   `json:"user"`
+	Token string `json:"token"`
+}
