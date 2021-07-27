@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Address struct {
 	ID        int
@@ -126,4 +128,15 @@ type WishedProduct struct {
 	UpdateAt   time.Time
 	Wishlist   WishList
 	Product    Product
+}
+
+type PostResponseJson struct {
+	Result  string      `json:"result"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+type GetResponseJson struct {
+	Result  string
+	Message string
 }

@@ -1,12 +1,14 @@
 package helpers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"runtime/debug"
 
 	"github.com/ArmanurRahman/skyblue/internal/config"
+	"github.com/ArmanurRahman/skyblue/internal/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -27,11 +29,26 @@ func GenerateHashPasswors(pass string) string {
 	return string(hashedPassword)
 }
 
-func GenerateClientResponseJson(w http.ResponseWriter, status int, message string) http.ResponseWriter {
+func GenerateClientResponseJson(w http.ResponseWriter, status int, result string, message string) {
+	returnJson := models.GetResponseJson{
+		Result:  result,
+		Message: message,
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	w.Write([]byte(fmt.Sprintf(`{"message": "%s"}`, message)))
-	return w
+	json.NewEncoder(w).Encode(returnJson)
+}
+
+func GenerateClientResponseWithPayloadJson(w http.ResponseWriter, status int, message string, payload interface{}, result string) {
+	returnJson := models.PostResponseJson{
+		Result:  result,
+		Message: message,
+		Data:    payload,
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(returnJson)
+
 }
 
 func CheckPassword(hashedPassword, userPassword string) (bool, error) {

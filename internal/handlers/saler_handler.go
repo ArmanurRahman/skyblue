@@ -33,7 +33,7 @@ func (m *Repository) RegistrationSaler(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(req, &salerParam)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "server error")
 		return
 	}
 
@@ -51,7 +51,7 @@ func (m *Repository) RegistrationSaler(w http.ResponseWriter, r *http.Request) {
 	err = m.App.Validate.Struct(address)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "invalid parameter")
 		return
 	}
 
@@ -69,14 +69,14 @@ func (m *Repository) RegistrationSaler(w http.ResponseWriter, r *http.Request) {
 	err = m.App.Validate.Struct(saler)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "invalid parameter")
 		return
 	}
 
 	id, err := m.DB.InsetAddress(address)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "can't insert into DB")
 		return
 	}
 
@@ -84,9 +84,9 @@ func (m *Repository) RegistrationSaler(w http.ResponseWriter, r *http.Request) {
 	err = m.DB.InsetSaler(saler)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "invalid parameter")
 		return
 	}
 
-	helpers.GenerateClientResponseJson(w, http.StatusOK, "success")
+	helpers.GenerateClientResponseJson(w, http.StatusOK, "success", "saler regestration successgully")
 }

@@ -25,20 +25,14 @@ type userJson struct {
 }
 
 func (m *Repository) RegistrationUser(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		helpers.ServerError(w, err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
-		return
-	}
 
 	req, _ := ioutil.ReadAll(r.Body)
 
 	var postUser userJson
-	err = json.Unmarshal(req, &postUser)
+	err := json.Unmarshal(req, &postUser)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "server error")
 		return
 	}
 	address := models.Address{
@@ -53,7 +47,7 @@ func (m *Repository) RegistrationUser(w http.ResponseWriter, r *http.Request) {
 	err = m.App.Validate.Struct(address)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "invalid parameter")
 		return
 	}
 
@@ -71,7 +65,7 @@ func (m *Repository) RegistrationUser(w http.ResponseWriter, r *http.Request) {
 	err = m.App.Validate.Struct(user)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "invalid parameter")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "invalid parameter")
 		return
 	}
 
@@ -79,7 +73,7 @@ func (m *Repository) RegistrationUser(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "can't insert address")
 		return
 	}
 
@@ -89,7 +83,7 @@ func (m *Repository) RegistrationUser(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	helpers.GenerateClientResponseJson(w, http.StatusOK, "success")
+	helpers.GenerateClientResponseJson(w, http.StatusOK, "success", "user registration successfully")
 }
 
 type loginJson struct {
@@ -101,16 +95,31 @@ func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 	req, _ := ioutil.ReadAll(r.Body)
 
 	var loginUser loginJson
+
 	err := json.Unmarshal(req, &loginUser)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "server error")
 		return
 	}
+
+	err = m.App.Validate.Var(loginUser.Email, "required,email")
+	if err != nil {
+		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "invalid parameter")
+		return
+	}
+	err = m.App.Validate.Var(loginUser.Password, "required")
+	if err != nil {
+		log.Println(err)
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "invalid parameter")
+		return
+	}
+
 	user, err := m.DB.Login(loginUser.Email)
 	if err != nil {
 		log.Println(err)
-		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error")
+		helpers.GenerateClientResponseJson(w, http.StatusInternalServerError, "error", "can't login")
 		return
 	}
 
@@ -120,8 +129,10 @@ func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !isValid {
-		helpers.GenerateClientResponseJson(w, http.StatusNotFound, "invalid credintial")
+		helpers.GenerateClientResponseJson(w, http.StatusNotFound, "error", "invalid credintial")
 		return
 	}
-	helpers.GenerateClientResponseJson(w, http.StatusOK, "success")
+
+	user.Password = ""
+	helpers.GenerateClientResponseWithPayloadJson(w, http.StatusOK, "Loged in successfully", user, "success")
 }
