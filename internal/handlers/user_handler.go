@@ -148,6 +148,5 @@ func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 		Token: token,
 	}
 
-	log.Println(token)
 	helpers.GenerateClientResponseWithPayloadJson(w, http.StatusOK, "Loged in successfully", res, "success")
 }

@@ -42,22 +42,24 @@ type User struct {
 }
 
 type Category struct {
-	ID       int
-	Name     string
-	Details  string
-	Type     string
-	CreateAt time.Time
-	UpdateAt time.Time
+	ID        int
+	Name      string `validate:"required"`
+	Details   string
+	Type      string `validate:"required"`
+	OtherInfo string
+	CreateAt  time.Time
+	UpdateAt  time.Time
 }
 
 type Product struct {
 	ID          int
-	Name        string
+	Name        string `validate:"required"`
 	Description string
-	CategoryId  int
+	CategoryId  int `validate:"required"`
 	CreateAt    time.Time
 	UpdateAt    time.Time
-	Category    Category
+	Category    *Category `validate:"omitempty"`
+	Url         string    `validate:"required"`
 }
 
 type AvailableProduct struct {

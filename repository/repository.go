@@ -7,4 +7,6 @@ type DatabaseRepo interface {
 	InsetUser(user models.User) error
 	InsetSaler(saler models.Saler) error
 	Login(email string) (models.User, error)
+	InsetProduct(product models.Product) error
+	InsetCategory(catetory models.Category) (int, error)
 }

@@ -1,0 +1,3 @@
+sql("
+    alter table products add column url varchar(500)
+")

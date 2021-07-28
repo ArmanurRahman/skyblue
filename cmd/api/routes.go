@@ -16,6 +16,7 @@ func Routes(a *config.AppConfig) http.Handler {
 	mux.Post("/saler-registration", handlers.Repo.PostSaler)
 
 	mux.Post("/user/login", handlers.Repo.Login)
+	mux.Post("/admin/product/registration", handlers.Repo.AddProduct)
 	mux.Route("/user", func(mux chi.Router) {
 
 	})

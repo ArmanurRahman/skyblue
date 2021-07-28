@@ -133,3 +133,60 @@ func (m *postgresRepo) Login(email string) (models.User, error) {
 	return user, nil
 
 }
+
+func (m *postgresRepo) InsetProduct(product models.Product) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	sql := `
+		insert into products (name, description, url, category_id, create_at, update_at)
+		values
+		($1, $2, $3, $4, $5, $6) 
+	`
+
+	_, err := m.DB.ExecContext(ctx, sql,
+		product.Name,
+		product.Description,
+		product.Url,
+		product.CategoryId,
+		product.CreateAt,
+		product.UpdateAt,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *postgresRepo) InsetCategory(catetory models.Category) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	sql := `
+		insert into category (name, details, type, other_info, create_at, update_at)
+		values
+		($1, $2, $3, $4, $5, $6) returning id
+	`
+
+	var id int
+	row := m.DB.QueryRowContext(ctx, sql,
+		catetory.Name,
+		catetory.Details,
+		catetory.Type,
+		catetory.OtherInfo,
+		catetory.CreateAt,
+		catetory.UpdateAt,
+	)
+
+	err := row.Scan(
+		&id,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}

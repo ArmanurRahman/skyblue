@@ -58,7 +58,3 @@ func (m *Repository) GetAllProduct(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) ProductDetails(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Home")
 }
-
-func (m *Repository) SearchProduct(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Home")
-}
